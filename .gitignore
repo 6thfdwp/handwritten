@@ -1,0 +1,6 @@
+*.txt
+*.classpath
+*.project
+*.settings
+*.ser
+dataset
