@@ -4,12 +4,10 @@ import java.io.IOException;
 import java.util.*;
 
 public class ID3Tester {
-	public String[] trainFiles = {"train50.txt", "train60.txt"};
-	public String[] testFiles = {"test50.txt", ""};
 	public HashSet<Integer> trainSet; // randomly selected file number (1-10) set for training
 	public HashSet<Integer> testSet;
-	public double[] proportions = {0.5, 0.55, 0.6};
-	public int[] samples = {5, 5, 6};
+	public ArrayList<Double> proportions;
+	public ArrayList<Integer> samples;
 	public Random  rand;
 
 //	public ID3Classifier c;
@@ -17,6 +15,8 @@ public class ID3Tester {
 		trainSet = new HashSet<Integer> ();
 		testSet = new HashSet<Integer> ();
 		rand = new Random(System.currentTimeMillis());
+		this.getProportions();
+		this.getSamples();
 	}
 	
 	public List<ClassifiedBitmap> loadBitmaps(HashSet<Integer> fileset) {
@@ -39,14 +39,6 @@ public class ID3Tester {
 		ClassifiedBitmap[] bitmaps = list.toArray( new ClassifiedBitmap[list.size()] ) ;
 		c.train( bitmaps, proportionThresh, samplesThresh);
 		System.out.format("\ntraining size %d\n", bitmaps.length );
-//		try {
-//
-//			ClassifiedBitmap[] bitmaps=LetterClassifier.loadLetters( trainFile );
-//
-//			c.train(bitmaps, proportionThresh, samplesThresh);
-//		} catch (IOException ex) {
-//			System.err.println("Error loading data.txt: "+ex.getMessage());
-//		}
 		try {
 			Classifier.save(c, cFile);
 		} catch (Exception ex) {
@@ -100,17 +92,32 @@ public class ID3Tester {
 		System.out.println(trainSet);
 		System.out.println(testSet);
 	}
+	
+	public void getProportions() {
+		ArrayList<Double> p = new ArrayList<Double> ();
+		for (double r=0.5; r<=0.8; r+=0.05) {
+			p.add( r );
+		}
+		proportions = p;
+//		System.out.println(proportions);
+	}
+	public void getSamples() {
+		ArrayList<Integer> s = new ArrayList<Integer> ();
+		for (int r=5; r<=10; r++) {
+			s.add( r );
+		}
+		samples = s;
+//		System.out.println(samples);
+	}
 	public void run() {
-		this.split(6);
-		
-		for ( int i=0; i<proportions.length; i++) {
-//			if (i == 1) break;
-			double proportion = proportions[i];
-			int sample = samples[i];
-			String cFile = "id3_" + proportion + "_" + sample + ".ser";
-			this.train(cFile, proportion, sample);
-			double errRate = this.evaluate(cFile);
-			System.out.format("id3 parameters:%.2f %d error:%f\n", proportion, sample, errRate);
+		for ( double proportion : proportions ) {
+			//if (i == 1) break;
+			for ( int sample : samples ) {
+				String cFile = String.format("id3_%.2f_%d.ser", proportion, sample);
+				this.train(cFile, proportion, sample);
+				double errRate = this.evaluate(cFile);
+				System.out.format("id3 parameters:%.2f %d error:%f\n", proportion, sample, errRate);
+			}
 		}
 	}
 	/**
@@ -118,11 +125,11 @@ public class ID3Tester {
 	 */
 	public static void main(String[] args) {
 		ID3Tester tester = new ID3Tester();
-//		tester.collect(5);
+		tester.split(5);
 //		List list = tester.loadBitmaps(tester.trainSet);
 //		System.out.println(list.size());
 //		tester.run();
-		for (int i=0; i<2; i++) {
+		for (int i=0; i<1; i++) {
 			tester.run();
 		}
 	}

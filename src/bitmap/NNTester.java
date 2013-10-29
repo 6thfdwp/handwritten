@@ -6,8 +6,8 @@ import java.util.*;
 public class NNTester {
 	public HashSet<Integer> trainSet; // randomly selected file number (1-10) set for training
 	public HashSet<Integer> testSet;
-	public double[] learnRates = {0.01};
-	public int[] presentations = {100000,150000,200000};
+	public ArrayList<Double> learnRates;
+	public ArrayList<Integer> presentations;
 	public Random  rand;
 
 //	public ID3Classifier c;
@@ -15,6 +15,8 @@ public class NNTester {
 		trainSet = new HashSet<Integer> ();
 		testSet = new HashSet<Integer> ();
 		rand = new Random(System.currentTimeMillis());
+		this.getRates();
+		this.getPresentations();
 	}
 	
 	public List<ClassifiedBitmap> loadBitmaps(HashSet<Integer> fileset) {
@@ -90,16 +92,27 @@ public class NNTester {
 		System.out.println(trainSet);
 		System.out.println(testSet);
 	}
+	public void getRates() {
+		ArrayList<Double> rates = new ArrayList<Double> ();
+		for (double r=0.1; r<=0.6; r+=0.1) {
+			rates.add( r );
+		}
+		learnRates = rates;
+//		System.out.println(rates);
+	}
+	public void getPresentations() {
+		ArrayList<Integer> presents = new ArrayList<Integer> ();
+		for (int r=100000; r<=256000; r+=50000) {
+			presents.add( r );
+		}
+		presentations = presents;
+//		System.out.println(presents);
+	}
 	public void run() {
-		this.split(5);
-		
-		for ( int i=0; i<presentations.length; i++) {
-//			if (i == 1) break;
-			int present = presentations[i];
-//			double rate = 0.0;
-			for ( int j=0; j<learnRates.length; j++) {
-				double rate = learnRates[j];
-				String cFile = "nn_" + present + "_" + rate + ".ser";
+//		this.split(5);
+		for ( int present : presentations ) {
+			for ( double rate : learnRates ) {
+				String cFile = String.format("nn_%d_%.2f.ser", present, rate);
 				this.train(cFile, present, rate);
 				double errRate = this.evaluate(cFile);
 				System.out.format("nn parameters: %d %.2f error:%f\n", present, rate, errRate);
@@ -111,11 +124,13 @@ public class NNTester {
 	 */
 	public static void main(String[] args) {
 		NNTester tester = new NNTester();
-//		tester.split(5);
+//		tester.getRates();
+//		tester.getPresentations();
+		tester.split(1);
 //		List list = tester.loadBitmaps(tester.trainSet);
 //		System.out.println(list.size());
 //		tester.run();
-		for (int i=0; i<2; i++) {
+		for (int i=0; i<1; i++) {
 			tester.run();
 		}
 	}
