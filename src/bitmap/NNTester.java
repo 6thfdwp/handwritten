@@ -94,7 +94,6 @@ public class NNTester {
 		this.loadBitmaps(testSet);
 		List<ClassifiedBitmap> list2 = this.loadBitmaps( testSet );
 		testBitmaps = list2.toArray( new ClassifiedBitmap[list2.size()] ) ;
-
 	}
 	public void getRates() {
 		ArrayList<Double> rates = new ArrayList<Double> ();
@@ -129,7 +128,7 @@ public class NNTester {
 //				start = new Date();
 				double errRate = this.evaluate(cFile);
 				
-				System.out.format("%d,%f  %f  %d\n",present, rate, errRate, trainTime);
+				System.out.format("%d,%f  %f  %.2f\n",present, rate, errRate, (double)trainTime/1000);
 			}			
 		}
 	}
