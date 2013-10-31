@@ -37,10 +37,7 @@ public class NNTester {
 	}
 	public void train(String cFile, int present, double rate ) {
 		NNClassifier c=new NNClassifier(32, 32);
-		List<ClassifiedBitmap> list = this.loadBitmaps( trainSet );
-		trainBitmaps = list.toArray( new ClassifiedBitmap[list.size()] ) ;
-		c.train( trainBitmaps, present, rate);
-//		System.out.format("\ntraining size %d\n", bitmaps.length );
+		c.train(trainBitmaps, present, rate);
 		try {
 			Classifier.save(c, cFile);
 		} catch (Exception ex) {
@@ -60,9 +57,6 @@ public class NNTester {
 	      System.exit(3);
 	    }
 	    if ( c != null ) {
-	    	List<ClassifiedBitmap> list = this.loadBitmaps(testSet);
-	    	testBitmaps = list.toArray( new ClassifiedBitmap[list.size()] );
-//	    	System.out.format("evaluating size %d\n", bitmaps.length );
             int numErrs = 0;
             for (int i=0; i<testBitmaps.length; i++) {
             	int actual=c.index( (Bitmap)testBitmaps[i] );
@@ -98,13 +92,13 @@ public class NNTester {
 		trainBitmaps = list1.toArray( new ClassifiedBitmap[list1.size()] ) ;
 
 		this.loadBitmaps(testSet);
-		List<ClassifiedBitmap> list2 = this.loadBitmaps( trainSet );
+		List<ClassifiedBitmap> list2 = this.loadBitmaps( testSet );
 		testBitmaps = list2.toArray( new ClassifiedBitmap[list2.size()] ) ;
 
 	}
 	public void getRates() {
 		ArrayList<Double> rates = new ArrayList<Double> ();
-		for (double r=0.1; r<1; r+=0.1) {
+		for (double r=0.01; r<1; r+=0.05) {
 			rates.add( r );
 		}
 		learnRates = rates;
@@ -113,7 +107,7 @@ public class NNTester {
 	public void getPresentations() {
 		ArrayList<Integer> presents = new ArrayList<Integer> ();
 		
-		for (int r=5000; r<=256000; r*=2) {
+		for (int r=5000; r<=320000; r*=2) {
 			presents.add( r );
 		}
 		presentations = presents;
@@ -127,10 +121,15 @@ public class NNTester {
 			for ( double rate : learnRates ) {
 //				for ( int i=0; i<5; i++) {}
 				String cFile = String.format("nn_%d_%.2f.ser", present, rate);
+				Date start = new Date();
 				this.train(cFile, present, rate);
+				Date end = new Date();
+				Long trainTime = end.getTime() - start.getTime();
+				
+//				start = new Date();
 				double errRate = this.evaluate(cFile);
-//				String output = String.format("%d/%d  %d  %f  %f\n", trainBitmaps.length, testBitmaps.length, present, rate, errRate);
-				System.out.format("%d  %f  %f\n",present, rate, errRate);
+				
+				System.out.format("%d,%f  %f  %d\n",present, rate, errRate, trainTime);
 			}			
 		}
 	}
@@ -146,7 +145,7 @@ public class NNTester {
 //		System.out.println(list.size());
 //		tester.run();
 //		for (int i=0; i<1; i++) {
-			tester.run(5);
+			tester.run(9);
 //		}
 	}
 
