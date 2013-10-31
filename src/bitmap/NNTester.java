@@ -6,6 +6,8 @@ import java.util.*;
 public class NNTester {
 	public HashSet<Integer> trainSet; // randomly selected file number (1-10) set for training
 	public HashSet<Integer> testSet;
+	public ClassifiedBitmap[] trainBitmaps;
+	public ClassifiedBitmap[] testBitmaps;
 	public ArrayList<Double> learnRates;
 	public ArrayList<Integer> presentations;
 	public Random  rand;
@@ -36,9 +38,9 @@ public class NNTester {
 	public void train(String cFile, int present, double rate ) {
 		NNClassifier c=new NNClassifier(32, 32);
 		List<ClassifiedBitmap> list = this.loadBitmaps( trainSet );
-		ClassifiedBitmap[] bitmaps = list.toArray( new ClassifiedBitmap[list.size()] ) ;
-		c.train( bitmaps, present, rate);
-		System.out.format("\ntraining size %d\n", bitmaps.length );
+		trainBitmaps = list.toArray( new ClassifiedBitmap[list.size()] ) ;
+		c.train( trainBitmaps, present, rate);
+//		System.out.format("\ntraining size %d\n", bitmaps.length );
 		try {
 			Classifier.save(c, cFile);
 		} catch (Exception ex) {
@@ -59,18 +61,18 @@ public class NNTester {
 	    }
 	    if ( c != null ) {
 	    	List<ClassifiedBitmap> list = this.loadBitmaps(testSet);
-	    	ClassifiedBitmap[] bitmaps = list.toArray( new ClassifiedBitmap[list.size()] );
-	    	System.out.format("evaluating size %d\n", bitmaps.length );
+	    	testBitmaps = list.toArray( new ClassifiedBitmap[list.size()] );
+//	    	System.out.format("evaluating size %d\n", bitmaps.length );
             int numErrs = 0;
-            for (int i=0; i<bitmaps.length; i++) {
-            	int actual=c.index((Bitmap)bitmaps[i]);
-            	int target=bitmaps[i].getTarget();
+            for (int i=0; i<testBitmaps.length; i++) {
+            	int actual=c.index( (Bitmap)testBitmaps[i] );
+            	int target=testBitmaps[i].getTarget();
             	if ( actual != target) {
             		numErrs += 1;
             	}
             }
-            errRate = numErrs / (double)bitmaps.length;
-            System.out.format("#errors %d\n", numErrs );
+            errRate = numErrs / (double)testBitmaps.length;
+//            System.out.format("#errors %d\n", numErrs );
 	    }
         return errRate;
 	}
@@ -91,10 +93,18 @@ public class NNTester {
 		}
 		System.out.println(trainSet);
 		System.out.println(testSet);
+		this.loadBitmaps(trainSet);
+		List<ClassifiedBitmap> list1 = this.loadBitmaps( trainSet );
+		trainBitmaps = list1.toArray( new ClassifiedBitmap[list1.size()] ) ;
+
+		this.loadBitmaps(testSet);
+		List<ClassifiedBitmap> list2 = this.loadBitmaps( trainSet );
+		testBitmaps = list2.toArray( new ClassifiedBitmap[list2.size()] ) ;
+
 	}
 	public void getRates() {
 		ArrayList<Double> rates = new ArrayList<Double> ();
-		for (double r=0.1; r<=0.6; r+=0.1) {
+		for (double r=0.1; r<1; r+=0.1) {
 			rates.add( r );
 		}
 		learnRates = rates;
@@ -102,20 +112,25 @@ public class NNTester {
 	}
 	public void getPresentations() {
 		ArrayList<Integer> presents = new ArrayList<Integer> ();
-		for (int r=100000; r<=256000; r+=50000) {
+		
+		for (int r=5000; r<=256000; r*=2) {
 			presents.add( r );
 		}
 		presentations = presents;
 //		System.out.println(presents);
 	}
-	public void run() {
-//		this.split(5);
+
+	public void run(int numPart) {
+		this.split(numPart);
+		System.out.format("%d / %d\n", trainBitmaps.length, testBitmaps.length);
 		for ( int present : presentations ) {
 			for ( double rate : learnRates ) {
+//				for ( int i=0; i<5; i++) {}
 				String cFile = String.format("nn_%d_%.2f.ser", present, rate);
 				this.train(cFile, present, rate);
 				double errRate = this.evaluate(cFile);
-				System.out.format("nn parameters: %d %.2f error:%f\n", present, rate, errRate);
+//				String output = String.format("%d/%d  %d  %f  %f\n", trainBitmaps.length, testBitmaps.length, present, rate, errRate);
+				System.out.format("%d  %f  %f\n",present, rate, errRate);
 			}			
 		}
 	}
@@ -126,13 +141,13 @@ public class NNTester {
 		NNTester tester = new NNTester();
 //		tester.getRates();
 //		tester.getPresentations();
-		tester.split(1);
+//		tester.split(5);
 //		List list = tester.loadBitmaps(tester.trainSet);
 //		System.out.println(list.size());
 //		tester.run();
-		for (int i=0; i<1; i++) {
-			tester.run();
-		}
+//		for (int i=0; i<1; i++) {
+			tester.run(5);
+//		}
 	}
 
 }
