@@ -6,7 +6,7 @@ import java.io.*;
  * <p>BinID3 contains methods for inducing a "binary" decision tree using Shannon's information theory.</p>
  * Do this:
  * (1) Supply necessary data to the constructor. (2) Use induce method to generate tree from data.
- * @author Mikael Bod�n
+ * @author Mikael Boden
  */
 
 /** 27/09/13 - modified selectFeature to return the information gain along
@@ -233,7 +233,7 @@ public class BinID3 implements Serializable {
 					max=n;
 			if ((double)classCnt[max]/(double)partition.length>proportionThresh || partition.length<numSamplesThresh) { 
 				// if more than proportionThresh (between 0 and 1) of samples in partition are of the same class OR fewer than numSamplesThresh samples
-				System.out.print(".");
+				//System.out.print(".");
 				return new BinTree(classes[max], classes.length);
 			}
 		}

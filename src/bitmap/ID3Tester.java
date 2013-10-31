@@ -6,6 +6,9 @@ import java.util.*;
 public class ID3Tester {
 	public HashSet<Integer> trainSet; // randomly selected file number (1-10) set for training
 	public HashSet<Integer> testSet;
+	public ClassifiedBitmap[] trainBitmaps;
+	public ClassifiedBitmap[] testBitmaps;
+	
 	public ArrayList<Double> proportions;
 	public ArrayList<Integer> samples;
 	public Random  rand;
@@ -35,10 +38,7 @@ public class ID3Tester {
 	}
 	public void train(String cFile, double proportionThresh, int samplesThresh) {
 		ID3Classifier c=new ID3Classifier(32, 32);
-		List<ClassifiedBitmap> list = this.loadBitmaps( trainSet );
-		ClassifiedBitmap[] bitmaps = list.toArray( new ClassifiedBitmap[list.size()] ) ;
-		c.train( bitmaps, proportionThresh, samplesThresh);
-		System.out.format("\ntraining size %d\n", bitmaps.length );
+		c.train( trainBitmaps, proportionThresh, samplesThresh);
 		try {
 			Classifier.save(c, cFile);
 		} catch (Exception ex) {
@@ -58,19 +58,16 @@ public class ID3Tester {
 	      System.exit(3);
 	    }
 	    if ( c != null ) {
-	    	List<ClassifiedBitmap> list = this.loadBitmaps(testSet);
-	    	ClassifiedBitmap[] bitmaps = list.toArray( new ClassifiedBitmap[list.size()] );
-	    	System.out.format("evaluating size %d\n", bitmaps.length );
             int numErrs = 0;
-            for (int i=0; i<bitmaps.length; i++) {
-            	int actual=c.index((Bitmap)bitmaps[i]);
-            	int target=bitmaps[i].getTarget();
+            for (int i=0; i<testBitmaps.length; i++) {
+            	int actual=c.index( (Bitmap)testBitmaps[i] );
+            	int target=testBitmaps[i].getTarget();
             	if ( actual != target) {
             		numErrs += 1;
             	}
             }
-            errRate = numErrs / (double)bitmaps.length;
-            System.out.format("# errors %d\n", numErrs );
+            errRate = numErrs / (double)testBitmaps.length;
+//            System.out.format("# errors %d\n", numErrs );
 	    }
         return errRate;
 	}
@@ -91,6 +88,13 @@ public class ID3Tester {
 		}
 		System.out.println(trainSet);
 		System.out.println(testSet);
+		this.loadBitmaps(trainSet);
+		List<ClassifiedBitmap> list1 = this.loadBitmaps( trainSet );
+		trainBitmaps = list1.toArray( new ClassifiedBitmap[list1.size()] ) ;
+
+		this.loadBitmaps(testSet);
+		List<ClassifiedBitmap> list2 = this.loadBitmaps( testSet );
+		testBitmaps = list2.toArray( new ClassifiedBitmap[list2.size()] ) ;
 	}
 	
 	public void getProportions() {
@@ -109,14 +113,19 @@ public class ID3Tester {
 		samples = s;
 //		System.out.println(samples);
 	}
-	public void run() {
+	public void run(int numPart) {
+		this.split(numPart);
+		System.out.format("%d / %d\n", trainBitmaps.length, testBitmaps.length);
 		for ( double proportion : proportions ) {
-			//if (i == 1) break;
 			for ( int sample : samples ) {
 				String cFile = String.format("id3_%.2f_%d.ser", proportion, sample);
+				Date start = new Date();
 				this.train(cFile, proportion, sample);
+				Date end = new Date();
+				Long trainTime = end.getTime() - start.getTime();
+				
 				double errRate = this.evaluate(cFile);
-				System.out.format("id3 parameters:%.2f %d error:%f\n", proportion, sample, errRate);
+				System.out.format("%.2f %d %f  %.2f\n", proportion, sample, errRate, (double)trainTime/1000);
 			}
 		}
 	}
@@ -125,13 +134,12 @@ public class ID3Tester {
 	 */
 	public static void main(String[] args) {
 		ID3Tester tester = new ID3Tester();
-		tester.split(5);
+		tester.run(5);
+//		tester.split(5);
 //		List list = tester.loadBitmaps(tester.trainSet);
 //		System.out.println(list.size());
 //		tester.run();
-		for (int i=0; i<1; i++) {
-			tester.run();
-		}
+
 	}
 
 }
