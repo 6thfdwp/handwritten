@@ -44,7 +44,7 @@ public class NNTester {
 			System.err.println("Failed to serialize and save file: "+ex.getMessage());
 		}
 	}
-	public double evaluate(String cFile) {
+	public double evaluate(String cFile, ClassifiedBitmap[] testBitmaps) {
 	    Classifier c=null;
 	    Double errRate = null;
 	    try {
@@ -97,15 +97,21 @@ public class NNTester {
 	}
 	public void getRates() {
 		ArrayList<Double> rates = new ArrayList<Double> ();
-		for (double r=0.01; r<1; r+=0.05) {
+		for (double r=0.1; r<0.3; r+=0.1) {
 			rates.add( r );
 		}
+//		for (double r=0.01; r<1; r+=0.05) {
+//			rates.add( r );
+//		}
 		learnRates = rates;
 //		System.out.println(rates);
 	}
 	public void getPresentations() {
 		ArrayList<Integer> presents = new ArrayList<Integer> ();
-		
+//		for (int r=256000; r<=256000; r++) {
+//			presents.add( r );
+//		}
+//		
 		for (int r=5000; r<=320000; r*=2) {
 			presents.add( r );
 		}
@@ -126,9 +132,10 @@ public class NNTester {
 				Long trainTime = end.getTime() - start.getTime();
 				
 //				start = new Date();
-				double errRate = this.evaluate(cFile);
+				double errTrain = this.evaluate(cFile, trainBitmaps);
+				double errRate = this.evaluate(cFile, testBitmaps);
 				
-				System.out.format("%d,%f  %f  %.2f\n",present, rate, errRate, (double)trainTime/1000);
+				System.out.format("%d,%f  %f  %f %.2fs\n",present, rate, errTrain, errRate, (double)trainTime/1000);
 			}			
 		}
 	}
@@ -143,9 +150,7 @@ public class NNTester {
 //		List list = tester.loadBitmaps(tester.trainSet);
 //		System.out.println(list.size());
 //		tester.run();
-//		for (int i=0; i<1; i++) {
-			tester.run(9);
-//		}
+		tester.run(7);
 	}
 
 }
