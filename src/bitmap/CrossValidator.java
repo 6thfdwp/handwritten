@@ -27,9 +27,11 @@ public class CrossValidator {
 						&& other.presentation == this.presentation && other.learnRate == this.learnRate);
 			}
 			public int hashcode() {
-				new Integer(nHidden).hashCode();
-				new Double(learnRate).hashCode();
-				return 0;
+				int hashcode = 0;
+				hashcode += new Integer(nHidden).hashCode();
+				hashcode += hashcode * 31 + new Integer(presentation).hashCode();
+				hashcode += new Double(learnRate).hashCode();
+				return hashcode;
 			}
 		}
 		public ArrayList<Integer> hiddens;
@@ -158,6 +160,21 @@ public class CrossValidator {
    }
 	
 	public HashSet<Integer> split(int numPart) {
+		HashSet<Integer> trainSet = new HashSet<Integer> ();
+		HashSet<Integer> testSet = new HashSet<Integer> ();
+		for ( int p=0; p<numPart; p++) {
+			trainSet.add( p+1 );
+		}
+		for ( int i=0; i<10; i++) {
+			if ( !trainSet.contains(i+1) ) {
+				testSet.add( i+1 );
+			}
+		}
+		System.out.println(trainSet);
+		System.out.println(testSet);
+		return trainSet;
+	}
+	public HashSet<Integer> splitRandom(int numPart) {
 		HashSet<Integer> trainSet = new HashSet<Integer> ();
 		HashSet<Integer> testSet = new HashSet<Integer> ();
 		for ( int p=0; p<numPart; p++) {

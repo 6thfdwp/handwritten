@@ -144,6 +144,9 @@ public class NNTester {
 	 */
 	public static void main(String[] args) {
 		NNTester tester = new NNTester();
+//		for (int i=0; i<10; i++) {
+//			tester.split( 6 );
+//		}
 //		tester.getRates();
 //		tester.getPresentations();
 //		tester.split(5);
