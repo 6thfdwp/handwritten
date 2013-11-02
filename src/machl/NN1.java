@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  * <p>A basic implementation of a single-layered feedforward neural network and backpropagation learning.</p>
- * @author Mikael Bodén
+ * @author Mikael Bodï¿½n
  * @version 1.0
  */
 
@@ -110,13 +110,21 @@ public class NN1 implements Serializable {
     rmse=Math.sqrt(rmse/y.length);
 
     // change weights according to errors
+    double[][] weightChanges = new double[y.length][x.length];
     for (int j=0; j<y.length; j++) {
       for (int i=0; i<x.length; i++) {
-        w[j][i]+=error[j]*x[i]*eta;
+    	double deltaW = error[j] * x[i] * eta;
+    	w[j][i] += deltaW;
+//        w[j][i]+=error[j]*x[i]*eta;
+//        if ( j == 0 ) {
+//        	weightChanges += deltaW;
+//        }
       }
       bias[j]+=error[j]*1.0*eta; // bias can be understood as a weight from a node which is always 1.0.
     }
-
+    if ( d[0] == 1.0 ) {
+  	System.out.println( weightChanges );
+    }
     return rmse;
   }
 
