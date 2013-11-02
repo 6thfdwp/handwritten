@@ -122,13 +122,15 @@ public class NN1 implements Serializable {
     if ( d[0] == 1.0 ) {
     	double sumW = 0.0;
     	int c = 0;
-    	for (int i=0; i<x.length; i++) {
-    		if (x[i] == 1.0 && c++<5) {
-    			System.out.format(" %f ", w[0][i]);
-    		}
-    		sumW += w[0][i];
-    	}
-    	System.out.format(" %f \n", sumW/x.length );
+    	System.out.format(" %f ", w[0][0]);
+    	System.out.format(" %f ", w[0][100]);
+    	System.out.format(" %f ", w[0][600]);
+    	System.out.format(" %f \n", w[0][1000]);
+//    	System.out.format(" %f ", w[0][0]);
+//    	for (int i=0; i<x.length; i++) {
+//    		sumW += w[0][i];
+//    	}
+//    	System.out.format(" %f \n", sumW/x.length );
 //    	System.out.println( );
     }
     return rmse;
