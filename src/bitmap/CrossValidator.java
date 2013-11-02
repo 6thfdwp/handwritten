@@ -135,7 +135,7 @@ public class CrossValidator {
 		for (MLNNModel.Para p : this.mlModel.models) {
 			double sumTrainerr = 0.0;
 			double sumValidateerr = 0.0;
-			
+			System.out.format("%s ", p);
 			for (int fold : fileset) {
 				this.partition( fileset, fold );
 				ClassifiedBitmap[] trainBitmaps = this.loadBitmaps( trainFileset );
@@ -145,15 +145,15 @@ public class CrossValidator {
 				
 				double errRateT = this.validate(cFile, trainBitmaps);
 				sumTrainerr += errRateT;
-				System.out.format("fold %d_%d,%d train: %f\n", fold, p.nHidden, p.presentation, errRateT);
+//				System.out.format(" train: %f\n", fold, p.nHidden, p.presentation, errRateT);
 				double errRateV = this.validate(cFile, validateBitmaps);
-				System.out.format("fold %d_%d,%d validate: %f\n", fold, p.nHidden, p.presentation, errRateV);
+				System.out.format(" %f ", errRateV);
 				sumValidateerr += errRateV;
 			}
 			errT.add( new AbstractMap.SimpleEntry<MLNNModel.Para, Double> ( p, sumTrainerr/fileset.size() ));
-			System.out.println( sumTrainerr/fileset.size() );
+			System.out.format(" %f ", sumTrainerr/fileset.size() );
 			errV.add( new AbstractMap.SimpleEntry<MLNNModel.Para, Double> ( p, sumValidateerr/fileset.size() ));
-			System.out.println( sumValidateerr/fileset.size() );
+			System.out.format(" %f \n", sumValidateerr/fileset.size() );
 		}
    }
 	
