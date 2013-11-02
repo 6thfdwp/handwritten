@@ -110,20 +110,26 @@ public class NN1 implements Serializable {
     rmse=Math.sqrt(rmse/y.length);
 
     // change weights according to errors
-    double[][] weightChanges = new double[y.length][x.length];
+//    double[][] weightChanges = new double[y.length][x.length];
     for (int j=0; j<y.length; j++) {
       for (int i=0; i<x.length; i++) {
     	double deltaW = error[j] * x[i] * eta;
     	w[j][i] += deltaW;
 //        w[j][i]+=error[j]*x[i]*eta;
-//        if ( j == 0 ) {
-//        	weightChanges += deltaW;
-//        }
       }
       bias[j]+=error[j]*1.0*eta; // bias can be understood as a weight from a node which is always 1.0.
     }
     if ( d[0] == 1.0 ) {
-  	System.out.println( weightChanges );
+    	double sumW = 0.0;
+    	int c = 0;
+    	for (int i=0; i<x.length; i++) {
+    		if (x[i] == 1.0 && c++<5) {
+    			System.out.format(" %f ", w[0][i]);
+    		}
+    		sumW += w[0][i];
+    	}
+    	System.out.format(" %f \n", sumW/x.length );
+//    	System.out.println( );
     }
     return rmse;
   }
