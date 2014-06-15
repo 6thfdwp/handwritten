@@ -13,7 +13,7 @@ UQ COMP7702 AI-A3
 import timeit
 
 timeit.timeit(stmt="pass", setup="pass", timer=<default>, number=1000000)
-
+# or
 timeit.Timer(stmt="pass", setup="pass", timer=<default>).timeit(number=1000000)
 ```
 
