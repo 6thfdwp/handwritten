@@ -20,7 +20,8 @@ timeit.Timer(stmt="pass", setup="pass", timer=<default>).timeit(number=1000000)
 
 ```python
 $ git config --system # access file in the system directory
-$ git config --global # access file in the home directory# override in individual repo
+$ git config --global # access file in the home directory
+# override in individual repo
 $ cd <project directory>
 $ git config user.name ""
 ```
