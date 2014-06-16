@@ -18,9 +18,9 @@ timeit.timeit(stmt="pass", setup="pass", timer=<default>, number=1000000)
 timeit.Timer(stmt="pass", setup="pass", timer=<default>).timeit(number=1000000)
 ```
 
-```
-git init
-git add .
-git commit -m "commets go here"
-git remote add orign url
+```python
+$ git config --system # access file in the system directory
+$ git config --global # access file in the home directory# override in individual repo
+$ cd <project directory>
+$ git config user.name ""
 ```
