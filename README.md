@@ -3,6 +3,7 @@ handwritten
 
 UQ COMP7702 AI-A3
 
+`push` `~/.gitconfig`
 
 [Python timeit doc](https://docs.python.org/2/library/timeit.html)
 
