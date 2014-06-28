@@ -3,8 +3,7 @@ handwritten
 
 UQ COMP7702 AI-A3
 
-`push` 
-`~/.gitconfig`
+`push`        `~/.gitconfig`
 
 [Git Completion](http://blog.yxwang.me/2010/01/git-completion/)
 [git-completion.bash](http://repo.or.cz/w/git.git/blob_plain/HEAD:/contrib/completion/git-completion.bash)
