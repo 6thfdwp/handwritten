@@ -3,9 +3,11 @@ handwritten
 
 UQ COMP7702 AI-A3
 
-`push` `~/.gitconfig`
+`push` 
+`~/.gitconfig`
 
-[Python timeit doc](https://docs.python.org/2/library/timeit.html)
+[Git Completion](http://blog.yxwang.me/2010/01/git-completion/)
+[git-completion.bash](http://repo.or.cz/w/git.git/blob_plain/HEAD:/contrib/completion/git-completion.bash)
 
 
 [How startup ideas grow](http://paulgraham.com/startupideas.html)
