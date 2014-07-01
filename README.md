@@ -3,13 +3,37 @@ handwritten
 
 UQ COMP7702 AI-A3
 
-`push`        `~/.gitconfig`
-
-[Git Completion](http://blog.yxwang.me/2010/01/git-completion/)
-[git-completion.bash](http://repo.or.cz/w/git.git/blob_plain/HEAD:/contrib/completion/git-completion.bash)
+`push`        
 
 
-[How startup ideas grow](http://paulgraham.com/startupideas.html)
+`~/.gitconfig`
+
+[The Magic of XOR](http://www.cs.umd.edu/class/sum2003/cmsc311/Notes/BitOp/xor.html)
+
+
+
+[XOR Properties](http://devenbhooshan.wordpress.com/2012/07/08/xor-properties/)
+
+
+
+[Bitwise Operators](http://www.cprogramming.com/tutorial/bitwise_operators.html)
+
+
+
+```python
+x = x ^ y
+y = x ^ y     # y<-x (x ^ y) ^ y = x ^ (y ^ y) = x ^ 0
+x = x ^ y     # (x ^ y) ^ x = (x ^ x) ^ y = 0 ^ y
+```
+
+```python
+"""
+ Need to address when bits in x and y are both set
+ By doing 'complement', then 'and', we got two '0' to be applied OR
+ This holds true when both bits are not set or either one is set
+"""
+x ^ y = (~x & y) | (x & ~y)
+```
 
 ```python
 import timeit
@@ -20,9 +44,8 @@ timeit.Timer(stmt="pass", setup="pass", timer=<default>).timeit(number=1000000)
 ```
 
 ```python
-$ git config --system # access file in the system directory
-$ git config --global # access file in the home directory
-# override in individual repo
-$ cd <project directory>
-$ git config user.name ""
+x ^ y = y ^ x                  # communtative
+(x ^ y) ^ z = x ^ (y ^ z)      # associative
+x ^ x = 0
+x ^ 0 = x                      # 0^0=0 1^1=0
 ```
